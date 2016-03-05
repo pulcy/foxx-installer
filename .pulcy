@@ -1,0 +1,5 @@
+{
+	"registry": "pulcy",
+	"image": "foxx-installer",
+	"tag-latest": true
+}
