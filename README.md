@@ -23,3 +23,20 @@ The following environment variable can be used instead of command line arguments
 - `FI_APP_PATH` - Replaces `--app-path`
 - `FI_MOUNTPOINT` - Replaces `--mountpoint`
 - `FI_REPLACE` - Replaces `--replace` (if set to "1")
+
+## Docker usage
+
+This is a sample Dockerfile that uses `foxx-installer` to install a app location in `./app/`.
+
+```
+FROM pulcy/foxx-installer
+
+COPY ./app/ /app/
+
+ENV FI_APP_PATH="/app/"
+ENV FI_MOUNTPOINT="/myapp"
+
+CMD ["install", "--database=mydb", "--server-url=http://arangodb.local:8529"]
+```
+
+Build the docker image and run it with a simple `docker run yourimagename`.
