@@ -21,6 +21,7 @@ import (
 type InstallFlags struct {
 	LocalPath  string
 	MountPoint string
+	Replace    bool
 }
 
 // Install installs an application found locally onto a given mountpoint.
@@ -32,6 +33,8 @@ func (s *Service) Install(flags InstallFlags) error {
 		action = "install"
 	} else if err != nil {
 		return maskAny(err)
+	} else if flags.Replace {
+		action = "replace"
 	} else {
 		action = "upgrade"
 	}

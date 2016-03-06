@@ -15,6 +15,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 
 	"github.com/pulcy/foxx-installer/service"
@@ -29,8 +31,12 @@ var (
 )
 
 func init() {
-	cmdInstall.Flags().StringVar(&installFlags.LocalPath, "app-path", "", "Local folder or zipfile containing the app")
-	cmdInstall.Flags().StringVar(&installFlags.MountPoint, "mountpoint", "", "Where to mount the app")
+	defaultAppPath := os.Getenv("FI_APP_PATH")
+	defaultMountPoint := os.Getenv("FI_MOUNTPOINT")
+	defaultReplace := os.Getenv("FI_REPLACE") == "1"
+	cmdInstall.Flags().StringVar(&installFlags.LocalPath, "app-path", defaultAppPath, "Local folder or zipfile containing the app")
+	cmdInstall.Flags().StringVar(&installFlags.MountPoint, "mountpoint", defaultMountPoint, "Where to mount the app")
+	cmdInstall.Flags().BoolVar(&installFlags.Replace, "replace", defaultReplace, "If set, the app will be replaced instead of upgraded")
 	cmdMain.AddCommand(cmdInstall)
 }
 

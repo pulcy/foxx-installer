@@ -26,10 +26,9 @@ import (
 )
 
 const (
-	projectName      = "foxx-installer"
-	defaultLogLevel  = "debug" //"info"
-	defaultServerURL = "http://localhost:8529"
-	defaultDatabase  = ""
+	projectName       = "foxx-installer"
+	defaultLogLevel   = "info"
+	_defaultServerURL = "http://localhost:8529"
 )
 
 var (
@@ -53,6 +52,12 @@ var (
 
 func init() {
 	log = logging.MustGetLogger(projectName)
+
+	defaultDatabase := os.Getenv("FI_DATABASE")
+	defaultServerURL := os.Getenv("FI_SERVER_URL")
+	if defaultServerURL == "" {
+		defaultServerURL = _defaultServerURL
+	}
 	cmdMain.PersistentFlags().StringVar(&globalFlags.logLevel, "log-level", defaultLogLevel, "Log level (debug|info|warning|error)")
 	cmdMain.PersistentFlags().StringVar(&serviceFlags.ServerURL, "server-url", defaultServerURL, "URL of the Arangodb server")
 	cmdMain.PersistentFlags().StringVar(&serviceFlags.Database, "database", defaultDatabase, "Name of the Arangodb database")
