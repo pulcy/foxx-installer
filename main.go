@@ -27,8 +27,8 @@ import (
 
 const (
 	projectName      = "foxx-installer"
-	defaultLogLevel  = "info"
-	defaultServerURL = "http://localhost:8259"
+	defaultLogLevel  = "debug" //"info"
+	defaultServerURL = "http://localhost:8529"
 	defaultDatabase  = ""
 )
 
@@ -60,6 +60,16 @@ func init() {
 
 func main() {
 	cmdMain.Execute()
+}
+
+func newService() *service.Service {
+	assertArgIsSet(serviceFlags.ServerURL, "--server-url")
+	assertArgIsSet(serviceFlags.Database, "--database")
+	s, err := service.NewService(serviceFlags, log)
+	if err != nil {
+		Exitf("Failed to initialize service: %#v\n", err)
+	}
+	return s
 }
 
 func showUsage(cmd *cobra.Command, args []string) {
@@ -100,4 +110,10 @@ func setLogLevel(logLevel string) {
 		Exitf("Invalid log-level '%s': %#v", logLevel, err)
 	}
 	logging.SetLevel(level, projectName)
+}
+
+func assertArgIsSet(arg, argKey string) {
+	if arg == "" {
+		Exitf("%s must be set\n", argKey)
+	}
 }

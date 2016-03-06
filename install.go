@@ -29,10 +29,18 @@ var (
 )
 
 func init() {
-	cmdInstall.Flags().StringVar(&installFlags.Path, "app-path", "", "Local folder containing the app")
+	cmdInstall.Flags().StringVar(&installFlags.LocalPath, "app-path", "", "Local folder or zipfile containing the app")
+	cmdInstall.Flags().StringVar(&installFlags.MountPoint, "mountpoint", "", "Where to mount the app")
 	cmdMain.AddCommand(cmdInstall)
 }
 
 func cmdInstallRun(cmd *cobra.Command, args []string) {
-	cmd.Usage()
+	assertArgIsSet(installFlags.LocalPath, "--app-path")
+	assertArgIsSet(installFlags.MountPoint, "--mountpoint")
+
+	s := newService()
+	if err := s.Install(installFlags); err != nil {
+		Exitf("install failed: %#v\n", err)
+	}
+	log.Info("Install succeeded")
 }
