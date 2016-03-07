@@ -58,9 +58,9 @@ func init() {
 	if defaultServerURL == "" {
 		defaultServerURL = _defaultServerURL
 	}
-	cmdMain.PersistentFlags().StringVar(&globalFlags.logLevel, "log-level", defaultLogLevel, "Log level (debug|info|warning|error)")
-	cmdMain.PersistentFlags().StringVar(&serviceFlags.ServerURL, "server-url", defaultServerURL, "URL of the Arangodb server")
-	cmdMain.PersistentFlags().StringVar(&serviceFlags.Database, "database", defaultDatabase, "Name of the Arangodb database")
+	cmdMain.PersistentFlags().StringVarP(&globalFlags.logLevel, "log-level", "L", defaultLogLevel, "Log level (debug|info|warning|error)")
+	cmdMain.PersistentFlags().StringVarP(&serviceFlags.ServerURL, "server-url", "S", defaultServerURL, "URL of the Arangodb server")
+	cmdMain.PersistentFlags().StringVarP(&serviceFlags.Database, "database", "D", defaultDatabase, "Name of the Arangodb database")
 }
 
 func main() {
