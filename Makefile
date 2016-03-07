@@ -48,6 +48,7 @@ $(GOBUILDDIR):
 update-vendor:
 	@rm -Rf $(VENDORDIR)
 	@pulsar go vendor -V $(VENDORDIR) \
+		github.com/giantswarm/retry-go \
 		github.com/juju/errgo \
 		github.com/op/go-logging \
 		github.com/spf13/pflag \
