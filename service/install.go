@@ -16,6 +16,9 @@ package service
 
 import (
 	"fmt"
+	"time"
+
+	"github.com/giantswarm/retry-go"
 )
 
 type InstallFlags struct {
@@ -28,7 +31,16 @@ type InstallFlags struct {
 func (s *Service) Install(flags InstallFlags) error {
 	// Query current app at mountpoint
 	var action string
-	_, err := s.Configuration(flags.MountPoint)
+	err := retry.Do(func() error {
+		_, err := s.Configuration(flags.MountPoint)
+		return maskAny(err)
+	},
+		// Keep trying for a long time since Arangodb can take a LONG time to get started
+		retry.RetryChecker(func(err error) bool { return !IsAppNotFound(err) }),
+		retry.MaxTries(100),
+		retry.Sleep(2*time.Second),
+		retry.Timeout(5*time.Minute),
+	)
 	if IsAppNotFound(err) {
 		action = "install"
 	} else if err != nil {
